@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
-from rest_framework import status
+from rest_framework import status, permissions
 from .functions import region, industry as fun_industry
+from accounts.models import Profile
 
 BASE_URL = "http://localhost:8000/"
 
@@ -14,6 +15,8 @@ class GetRegionEmissionGas(APIView):
     "result" : 2018년도 전국 온실가스(349,791,382 [GHG]) 대비 서울는 0.56%의 온실가스(1,955,912[GHG])를 배출하고 있습니다."
     "media_url" : http://domain.com/media/region_total_usems_qnty_2018_서울.png"
     """
+
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         year = request.data.get("year")

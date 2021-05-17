@@ -55,9 +55,9 @@ class SignUpRequestData(viewsets.ModelViewSet):
 # return JsonResponse
 class SignUpRequestAccept(APIView):
     def post(self, request):
-        profile_pk = request.data.get("profile_pk")
+        officer_email = request.data.get("officer_email")
         try:
-            profile = Profile.objects.get(id=profile_pk)
+            profile = Profile.objects.get(officer_email=officer_email)
         except Profile.DoesNotExist:
             return JsonResponse(
                 {"err_message": "Object Profile Not Found"},

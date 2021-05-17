@@ -95,12 +95,12 @@ WSGI_APPLICATION = "envirmate.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 
 # Password validation
@@ -175,7 +175,4 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 # REST_AUTH_SERIALIZERS = {
 #     "USER_DETAILS_SERIALIZER": "accounts.serializers.CustomUserDetailsSerializer"
-# }
-# PASSWORD_RESET_SERIALIZER = {
-
 # }

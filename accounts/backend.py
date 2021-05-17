@@ -5,10 +5,10 @@ from .models import User
 
 class AuthCodeBackend(backends.ModelBackend):
     def authenticate(self, request, **kwargs):
-        auth_code = kwargs["username"]
+        email = kwargs["email"]
         password = kwargs["password"]
         try:
-            user = User.objects.get(auth_code=auth_code)
+            user = User.objects.get(email=email)
             if user.check_password(password):
                 return user
         except User.DoesNotExist:

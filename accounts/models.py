@@ -37,7 +37,8 @@ class Profile(models.Model):
     officer_position = models.CharField(max_length=60)
     officer_email = models.EmailField(unique=True, max_length=255)
     password = models.CharField(_("password"), max_length=128)
-
+    location_name = models.CharField(max_length=20)
+    industry = models.CharField(max_length=100)
     objects = ProfileManager()
 
 
