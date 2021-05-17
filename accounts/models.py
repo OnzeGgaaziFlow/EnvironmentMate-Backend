@@ -30,6 +30,18 @@ class ProfileManager(models.Manager):
 
 
 class Profile(models.Model):
+    """
+    business_number         사업장 번호
+    business_name           사업장 이름
+    officer_name            책임자 이름
+    officer_phone           책임자 번호
+    officer_position        책임자 직급
+    officer_email           책임자 이메일
+    password                회원가입 시 설정할 비밀번호
+    industry                업종
+    location_name           지역
+    """
+
     business_number = models.CharField(max_length=60, unique=True)
     business_name = models.CharField(max_length=20, unique=True)
     officer_name = models.CharField(max_length=30)
@@ -39,6 +51,7 @@ class Profile(models.Model):
     password = models.CharField(_("password"), max_length=128)
     location_name = models.CharField(max_length=20)
     industry = models.CharField(max_length=100)
+
     objects = ProfileManager()
 
 

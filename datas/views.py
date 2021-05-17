@@ -9,8 +9,7 @@ BASE_URL = "http://localhost:8000/"
 
 class GetRegionEmissionGas(APIView):
     """
-    입력값 : 년도, 지역
-    해당 년도와 지역대비 전체 온실 배출량 비교
+    지역대비 전체 온실 배출량 비교
     ex) 결과값(JSON) :
     "result" : 2018년도 전국 온실가스(349,791,382 [GHG]) 대비 서울는 0.56%의 온실가스(1,955,912[GHG])를 배출하고 있습니다."
     "media_url" : http://domain.com/media/region_total_usems_qnty_2018_서울.png"
@@ -38,11 +37,6 @@ class GetRegionEmissionGas(APIView):
         except ValueError:
             return JsonResponse(
                 {"err_message": "Fail to get data from open API."},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-        if not result:
-            return JsonResponse(
-                {"err_message": "Err Occurred. Please Try Again."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
         media_url = (
@@ -79,11 +73,11 @@ class GetEmissionGasCompareFromOther(APIView):
                 {"err_message": "Key Error from usage"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-        result = region.industry_usems_qnty_statistics(year, location_name, usage)
-        if not result:
+        try:
+            result = region.industry_usems_qnty_statistics(year, location_name, usage)
+        except ValueError:
             return JsonResponse(
-                {"err_message": "Err Occurred. Please Try Again."},
+                {"err_message": "Fail to get data from open API."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
         media_url = (
@@ -101,22 +95,25 @@ class GetIndustryEmissionGasFromAll(APIView):
     """
 
     def get(self, request):
-        year = request.data.get("year")
-        if not year:
+        year = 2018
+        user = request.user
+        user_profile = user.profile
+        if not user_profile:
             return JsonResponse(
-                {"err_message": "Key Error from year"},
-                status=status.HTTP_400_BAD_REQUEST,
+                {"err_message": "Can't get profile from user"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-        industry = request.data.get("industry")
+        industry = user_profile.industry
         if not industry:
             return JsonResponse(
                 {"err_message": "Key Error from industry"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        result = fun_industry.total_usems_qnty(year, industry, "GHG")
-        if not result:
+        try:
+            result = fun_industry.total_usems_qnty(year, industry, "GHG")
+        except ValueError:
             return JsonResponse(
-                {"err_message": "Err Occurred. Please Try Again."},
+                {"err_message": "Fail to get data from open API."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
         media_url = f"{BASE_URL}media/industry_total_usems_qnty_{year}_{industry}.png"
