@@ -19,23 +19,26 @@ class GetRegionEmissionGas(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        year = request.data.get("year")
-        if not year:
+        user = request.user
+        user_profile = user.profile
+        year = 2018
+        if not user_profile:
             return JsonResponse(
-                {"err_message": "Key Error from year"}, status.HTTP_400_BAD_REQUEST
+                {"err_message": "Can't get profile from user"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-        location_name = request.data.get("location_name")
+        location_name = user_profile.location_name
         if not location_name:
             return JsonResponse(
                 {"err_message": "Key Error from location_name"},
-                status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_400_BAD_REQUEST,
             )
         try:
             result = region.total_usems_qnty(year, location_name)
         except ValueError:
             return JsonResponse(
                 {"err_message": "Fail to get data from open API."},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
         if not result:
             return JsonResponse(
