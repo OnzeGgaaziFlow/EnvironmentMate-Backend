@@ -33,7 +33,7 @@ class Profile(models.Model):
     business_number = models.CharField(max_length=60, unique=True)
     business_name = models.CharField(max_length=20, unique=True)
     officer_name = models.CharField(max_length=30)
-    # officer_phone = PhoneField(unique=True)
+    officer_phone = PhoneField(unique=True)
     officer_position = models.CharField(max_length=60)
     officer_email = models.EmailField(unique=True, max_length=255)
     password = models.CharField(_("password"), max_length=128)
@@ -47,20 +47,20 @@ class UserManager(BaseUserManager):
     for authentication instead of usernames.
     """
 
-    def create_user(self, auth_code, password, **extra_fields):
+    def create_user(self, email, password, **extra_fields):
         """
         Create and save a User with the given email and password.
         """
         email = extra_fields.get("email")
-        if not auth_code:
+        if not email:
             raise ValueError(_("The Auth Code must be set"))
         email = self.normalize_email(email)
-        user = self.model(auth_code=auth_code, **extra_fields)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save()
         return user
 
-    def create_superuser(self, auth_code, password, **extra_fields):
+    def create_superuser(self, email, password, **extra_fields):
         """
         Create and save a SuperUser with the given email and password.
         """
@@ -72,13 +72,12 @@ class UserManager(BaseUserManager):
             raise ValueError(_("Superuser must have is_staff=True."))
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
-        return self.create_user(auth_code, password, **extra_fields)
+        return self.create_user(email, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = None
-    auth_code = models.CharField(unique=True, max_length=30)
-    email = models.EmailField(default="a@naver.com")
+    email = models.EmailField(unique=True, max_length=255)
     profile = models.ForeignKey(
         Profile, on_delete=CASCADE, null=True, related_name="profile_fk"
     )
@@ -97,10 +96,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
 
-    USERNAME_FIELD = "auth_code"
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     objects = UserManager()
 
     def __str__(self):
-        return self.auth_code
+        return self.email

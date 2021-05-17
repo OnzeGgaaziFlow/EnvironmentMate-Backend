@@ -163,10 +163,10 @@ REST_FRAMEWORK = {
 }
 
 # Authentication Backend
-# AUTHENTICATION_BACKENDS = (
-# "accounts.backend.AuthCodeBackend",
-# "allauth.account.auth_backends.AuthenticationBackend",
-# )
+AUTHENTICATION_BACKENDS = (
+    "accounts.backend.AuthCodeBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
 #
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = True

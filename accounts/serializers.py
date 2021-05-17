@@ -1,5 +1,5 @@
 from django.db.models.base import Model
-from accounts.models import User
+from accounts.models import User, Profile
 from rest_framework import serializers
 
 
@@ -9,10 +9,10 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-# class SignUpRequestDataSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Profile
-#         fields = "__all__"
+class SignUpRequestDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = "__all__"
 
 
 class SignupRequestAcceptSerailizer(serializers.Serializer):
