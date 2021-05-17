@@ -215,12 +215,13 @@ class GetIndustryEnergyCompareDetail(APIView):
                 {"err_message": "Key Error from electric"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        result = fun_industry.items_usems_qnty_statistics(
-            year, industry, gas, other, oil, coal, thermal, electric, "GHG"
-        )
-        if not result:
+        try:
+            result = fun_industry.items_usems_qnty_statistics(
+                year, industry, gas, other, oil, coal, thermal, electric, "GHG"
+            )
+        except ValueError:
             return JsonResponse(
-                {"err_message": "Err Occurred. Please Try Again."},
+                {"err_message": "Fail to get data from open API."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
         media_url = f"{BASE_URL}media/items_usems_qnty_statistics_{year}_{industry}.png"
