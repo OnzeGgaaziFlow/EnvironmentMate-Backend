@@ -1,3 +1,6 @@
+from matplotlib.pyplot import get
+from pandas.core.base import DataError
+from datas.functions.microdata.microdata_csv import micro_data_series_data
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -7,6 +10,7 @@ from .models import *
 from .serializers import *
 from .permissions import *
 from django.core.mail import EmailMessage
+from django.conf import settings
 
 # Create your views here.
 
@@ -31,8 +35,19 @@ class SignUpRequestData(viewsets.ModelViewSet):
         password                만들어지게 될 비밀번호
 
         """
+        business_number = request.data.get("business_number")
+        location_name = request.data.get("location_name")
+
+        get_data = micro_data_series_data(business_number, location_name, "GHG")
+        if not get_data:
+            return JsonResponse(
+                {"message": "Invalid Key"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        # except get_data is False:
+
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         # response = Response(
@@ -60,13 +75,13 @@ class SignUpRequestAccept(APIView):
             profile = Profile.objects.get(officer_email=officer_email)
         except Profile.DoesNotExist:
             return JsonResponse(
-                {"err_message": "Object Profile Not Found"},
+                {"message": "Object Profile Not Found"},
                 status=status.HTTP_404_NOT_FOUND,
             )
         isprofile = profile.profile_fk.first()
         if isprofile:
             return JsonResponse(
-                {"err_message": "Profile Already Registered"},
+                {"message": "Profile Already Registered"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         profile_email = profile.officer_email
@@ -74,8 +89,8 @@ class SignUpRequestAccept(APIView):
         user = User.objects.create(email=profile_email, profile=profile)
         if not user:
             return JsonResponse(
-                {"err_message": "Error When Creating User"},
-                status=status.HTTP_400_BAD_REQUEST,
+                {"message": "Error When Creating User"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
         user.set_password(password)
         user.save()
@@ -86,16 +101,9 @@ class SignUpRequestAccept(APIView):
             mail.send()
         except:
             return JsonResponse(
-                {"err_message": "Error Occurred When Sending Mail"},
-                status=status.HTTP_400_BAD_REQUEST,
+                {"message": "Error Occurred When Sending Mail"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
         profile.password = "1111"
         profile.save()
         return JsonResponse({"message": "User Created"}, status=status.HTTP_201_CREATED)
-
-
-class TestView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        return JsonResponse({"Message": "Test Success!"})

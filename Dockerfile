@@ -13,4 +13,4 @@ COPY . .
 # 포트 설정
 EXPOSE 8000
 # gunicorn 실행
-# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "envirmate.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "envirmate.wsgi:application"]

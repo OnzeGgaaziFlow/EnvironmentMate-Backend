@@ -12,5 +12,4 @@ urlpatterns = [
         views.SignUpRequestAccept.as_view(),
         name="signup_accept",
     ),
-    path("test", views.TestView.as_view()),
 ]

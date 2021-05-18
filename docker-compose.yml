@@ -9,6 +9,7 @@ services:
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - ./volume_static:/staticfiles
+      - ./volume_media:/media
     depends_on:
       - web
   web:
@@ -19,6 +20,7 @@ services:
     command: gunicorn --bind 0.0.0.0:8000 envirmate.wsgi:application
     volumes:
       - ./volume_static:/usr/src/app/staticfiles
+      - ./volume_media:/usr/src/app/media
     expose:
       - "8000"
     depends_on:

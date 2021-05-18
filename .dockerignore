@@ -1,1 +1,8 @@
-secrets.json
+# #if vscode uses
+# .vscode
+
+# #if migrations file exists
+migrations/
+
+# #static volume file
+# static_f4/
