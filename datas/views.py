@@ -17,7 +17,7 @@ class GetRegionEmissionGas(APIView):
     "media_url" : http://domain.com/media/region_total_usems_qnty_2018_서울.png"
     """
 
-    # permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         user = request.user
@@ -56,6 +56,8 @@ class GetEmissionGasCompareFromOther(APIView):
     "result": "전남 지역 총 (78,516,261[GHG]) 온실가스 중 해당 업체는 온실가스(583,972[GHG]) 배출하고 있습니다."
     "media_url" : "http://domain.com/media/region_industry_usems_qnty_2017_전남.png"
     """
+
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         user = request.user
@@ -100,6 +102,8 @@ class GetIndustryEmissionGasFromAll(APIView):
     "media_url" : "http://domain.com/media/industry_total_usems_qnty_2018_광업.png
     """
 
+    permission_classes = (permissions.IsAuthenticated,)
+
     def get(self, request):
         year = 2018
         user = request.user
@@ -134,6 +138,8 @@ class GetIndustryEmissionGasFromSameAll(APIView):
     "result" : "광업 업종 총 (673,625[GHG]) 온실가스 중 해당 업체는 온실가스(130,002[GHG]) 배출하고 있습니다."
     "media_url" : "http://domain.com/media/my_industry_usems_qnty_2018_광업.png
     """
+
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         user = request.user
@@ -181,6 +187,8 @@ class GetIndustryEnergyCompareDetail(APIView):
     입력값: 가스, 기타, 석유류, 석탄류, 열에너지, 전력
     "media_url" : "http://domain.com/media/items_usems_qnty_statistics_2018_광업.png
     """
+
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         year = 2018

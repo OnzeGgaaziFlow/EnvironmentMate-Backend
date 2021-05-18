@@ -13,11 +13,13 @@ services:
     depends_on:
       - web
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: pcj0198/envirmate_web
     container_name: web
-    command: gunicorn --bind 0.0.0.0:8000 envirmate.wsgi:application
+    command:
+      - python manage.py createsuperuser
+      - python manage.py migrate --run-syncdb
+      - python manage.py collectstatic
+      - gunicorn --bind 0.0.0.0:8000 envirmate.wsgi:application
     volumes:
       - ./volume_static:/usr/src/app/staticfiles
       - ./volume_media:/usr/src/app/media
@@ -32,9 +34,9 @@ services:
       - "3306"
     environment:
       MYSQL_DATABASE: envirmate_db
-      MYSQL_USER: envirmate
+      MYSQL_USER: ubuntu
       MYSQL_PASSWORD: envirmate
       MYSQL_ROOT_PASSWORD: envirmate
     volumes:
-      - ../db/data:/var/lib/mysql
-      - ../db/data/conf.d:/etc/mysql/conf.d
+      - ./db/data:/var/lib/mysql
+      - ./db/data/conf.d:/etc/mysql/conf.d

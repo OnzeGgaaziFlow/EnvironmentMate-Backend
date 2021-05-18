@@ -5,4 +5,4 @@
 migrations/
 
 # #static volume file
-# static_f4/
+venv/
