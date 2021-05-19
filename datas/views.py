@@ -4,13 +4,20 @@ from datas.functions.microdata import microdata_csv
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework import status, permissions
-from .functions import region, industry as fun_industry
+from .functions import region as fun_region, industry as fun_industry
 from accounts.models import Profile
 from .models import Microdata
 
 BASE_URL = "localhost:8000/"
 
 class GetTotalEnergyFromNumber(APIView):
+    """
+    해당 사업장의 총 사용량 반환    
+    """
+
+
+    permission_classes = (permissions.IsAuthenticated,)
+    
     def get(self, request):
         user = request.user
         year = 2018
@@ -71,7 +78,7 @@ class GetRegionEmissionGas(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         try:
-            result = region.total_usems_qnty(year, location_name)
+            result = fun_region.total_usems_qnty(year, location_name)
         except ValueError:
             return JsonResponse(
                 {"message": "Fail to get data from open API."},
@@ -189,7 +196,7 @@ class GetIndustryEmissionGasFromSameAll(APIView):
         industry = user_profile.industry
         if not industry:
             return JsonResponse(
-                {"message": "Key Error from location_name"},
+                {"message": "Key Error from industry"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         usage = request.data.get("usage")
