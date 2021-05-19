@@ -6,9 +6,11 @@ from .views import (
     GetIndustryEmissionGasFromSameAll,
     GetIndustryEnergyCompareDetail,
     GetRegionEmissionGas,
+    GetTotalEnergyFromNumber
 )
 
 urlpatterns = [
+    path("get/number", GetTotalEnergyFromNumber.as_view(), name='get_business_number'),
     path("compare/region", GetRegionEmissionGas.as_view(), name="get_location_comapre"),
     path(
         "compare/same-region",
