@@ -1,11 +1,47 @@
+import pandas as pd
+import datetime
 from datas.functions.microdata import microdata_csv
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework import status, permissions
 from .functions import region, industry as fun_industry
 from accounts.models import Profile
+from .models import Microdata
 
-BASE_URL = "http://b92b81f7410e.ngrok.io"
+BASE_URL = "localhost:8000/"
+
+class GetTotalEnergyFromNumber(APIView):
+    def get(self, request):
+        user = request.user
+        year = 2018
+        user_profile = user.profile
+        if not user_profile:
+            return JsonResponse(
+                {"message": "Can't get profile from user"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        business_number = user_profile.business_number
+        if not business_number:
+            return JsonResponse(
+                {"message": "Key Error from business_number"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        use = 0
+        for i in Microdata.objects.filter(fanm="CB60C1A3561DEFE46CE65C13E79C52041786F5DD").values('use'):
+            use += float(i['use'])
+        
+        # df = list((Microdata.objects.filter(fanm="CB60C1A3561DEFE46CE65C13E79C52041786F5DD").values()))
+        # print(df[0])
+        # microdatas_list = list(microdatas)
+        # print(microdatas_list)
+
+        # a_list = list(a)
+        # print(a)
+        # microdata_ids = set(microdata.id for microdata in microdatas)
+        # existing_question_microdatas = filter(lambda x: x.microdata.id not in microdatas_id, existing_question_microdatas)
+        # print(existing_question_microdatas)
+        return JsonResponse({"total_use" : use})
+        # business_number = microdata
 
 
 class GetRegionEmissionGas(APIView):
@@ -252,3 +288,9 @@ class GetIndustryEnergyCompareDetail(APIView):
             )
         media_url = f"{BASE_URL}media/items_usems_qnty_statistics_{year}_{industry}.png"
         return JsonResponse({"result": result, "media_url": media_url})
+
+
+class GetPredictGraph(APIView):
+    def get(self, request):
+        media_url = f"{BASE_URL}media/cod2_kr.png"
+        return JsonResponse({"result": "Success!", "media_url": media_url})

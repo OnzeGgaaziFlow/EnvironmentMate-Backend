@@ -107,50 +107,6 @@ def micro_data(file_type, tyear, area, eg_type):
     return out_df
 
 
-#
-# def micro_data(file_type, tyear, eg_type):
-#
-#     url = url_page('1', file_type, tyear, eg_type)
-#     res = requests.get(url) # get 방식으로 페이지 요청
-#     html = BeautifulSoup(res.text, 'lxml') # 위에 설정한 페이지 읽기
-#     # print(html)
-#
-#     total_count = html.find('totalcount').text # 전체 행수
-#     total_page = int(int(total_count)/int(html.find('numofrows').text))+1 # 전체 페이지수
-#     print('전체 행수, 전체 페이지수 : ', total_count, total_page)
-#
-#     rows=[] # 빈 리스트 설정
-#     for pgn in range(1, total_page + 1):
-#         url = url_page(pgn, file_type, tyear, eg_type)
-#         res = requests.get(url) # get 방식으로 페이지 요청
-#         html = BeautifulSoup(res.text, 'lxml') # 위에 설정한 페이지 읽기
-#         data = html.find_all('item') # XML에서 시간별 데이터 읽기
-#
-#         for idx in range(len(data)):
-#             fanm = data[idx].wrkplc_fanm.text # 사업장가명
-#             year = data[idx].trgt_year.text # 연도
-#             locl = data[idx].widm_locl_nm.text # 광역지역
-#             wrkr = data[idx].wrkplc_wrkr_vol_nm.text # 종사자규모
-#             ennm = data[idx].engsrc_nm.text # 에너지원
-#             endv = data[idx].engsrc_dvsn_nm.text # 에너지 구분
-#             kscd = data[idx].ksic_cd.text # 표준산업분류코드
-#             ksnm = data[idx].ksic_nm.text # 표준산업분류명
-#             if eg_type == 'TOE':
-#                 use = data[idx].engy_cnsm_qnty_nidval.text # 소비(배출)량
-#             if eg_type == 'GHG':
-#                 use = data[idx].ghg_emsn_qnty_nidval.text # 소비(배출)량
-#
-#             rows.append({'사업장':fanm, '연도':year, '광역지역':locl, '종사자규모':wrkr,
-#                     '에너지원':ennm, '에너지구분':endv, '표준산업코드':kscd, '표준산업코드명':ksnm, '소비(배출)량':use})
-#
-#     cols = ['사업장', '연도', '광역지역', '종사자규모', '에너지원', '에너지구분', '표준산업코드', '표준산업코드명', '소비(배출)량']
-#     out_df = pd.DataFrame(rows) # 리스트를 데이터프레임으로 변환
-#     out_df.columns = cols # 데이터프레임의 컬럼명을 변경
-#     #print(out_df)
-#
-#     return out_df
-
-
 # 사업장 id, 연도, 지역, 온실가스배출 단위를 입력으로 받으면 과거 해당 사업장에 대한 에너지 소비량을 확인할 수 있음.
 def micro_data_table(id, tyear, area, eg_type):
     data = micro_data("xml", tyear, area, eg_type)
