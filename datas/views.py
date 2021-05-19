@@ -288,3 +288,9 @@ class GetIndustryEnergyCompareDetail(APIView):
             )
         media_url = f"{BASE_URL}media/items_usems_qnty_statistics_{year}_{industry}.png"
         return JsonResponse({"result": result, "media_url": media_url})
+
+
+class GetPredictGraph(APIView):
+    def get(self, request):
+        media_url = f"{BASE_URL}media/cod2_kr.png"
+        return JsonResponse({"result": "Success!", "media_url": media_url})

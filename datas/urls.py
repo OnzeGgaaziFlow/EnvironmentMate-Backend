@@ -6,7 +6,8 @@ from .views import (
     GetIndustryEmissionGasFromSameAll,
     GetIndustryEnergyCompareDetail,
     GetRegionEmissionGas,
-    GetTotalEnergyFromNumber
+    GetTotalEnergyFromNumber,
+    GetPredictGraph
 )
 
 urlpatterns = [
@@ -32,4 +33,5 @@ urlpatterns = [
         GetIndustryEnergyCompareDetail.as_view(),
         name="get_industry_engergy_detail",
     ),
+    path("get/predict-graph" ,GetPredictGraph.as_view(), name="get_predict_graph"),
 ]
