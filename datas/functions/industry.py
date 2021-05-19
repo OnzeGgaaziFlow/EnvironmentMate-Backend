@@ -9,7 +9,7 @@ from urllib.parse import quote_plus, urlencode
 from pandas import DataFrame, Series  # 시리즈, 데이터프레임 모듈
 from pandas import ExcelFile, ExcelWriter  # 엑셀 읽기, 쓰기 모듈
 import pickle
-import seaborn as sns
+# import seaborn as sns
 import matplotlib.pyplot as plt
 
 #%%
@@ -145,7 +145,7 @@ def total_usems_qnty(year, industry, unit):
     data = report_table("xml", str(year), "업종별", unit)
     labels = data.index.to_list()
     # print(labels)
-    colors = sns.color_palette("hls", len(labels))
+    # colors = sns.color_palette("hls", len(labels))
     frequency = data["합계"].values
     industry_frequency = frequency[labels.index(industry)]
     fig = plt.figure(figsize=(8, 8))
@@ -210,7 +210,7 @@ def industry_usems_qnty_statistics(year, industry, usage, unit):
     data = report_table("xml", str(year), "업종별", unit)  # 파일형식, 연도, 구분, 에너지/온실가스
     ## 데이터 준비
     labels = ["동종 업체", "해당 업체"]
-    colors = sns.color_palette("hls", len(labels))  ## 색상
+    # colors = sns.color_palette("hls", len(labels))  ## 색상 
     frequency = [(data.at[industry, "합계"] - usage), usage]
     my_frequency = frequency[1]
     fig = plt.figure(figsize=(8, 8))

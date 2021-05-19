@@ -33,7 +33,7 @@ volume_static/
 
 # C extensions
 *.so
-
+pandas/
 # Distribution / packaging
 .Python
 build/

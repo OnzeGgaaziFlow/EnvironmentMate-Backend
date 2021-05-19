@@ -3,7 +3,6 @@ from django.db import models
 from django.db.models.deletion import CASCADE
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
-from phone_field import PhoneField
 from django.utils import timezone
 
 
@@ -45,7 +44,7 @@ class Profile(models.Model):
     business_number = models.CharField(max_length=60, unique=True)
     business_name = models.CharField(max_length=20, unique=True)
     officer_name = models.CharField(max_length=30)
-    officer_phone = PhoneField(unique=True)
+    officer_phone = models.CharField(unique=True, max_length=30)
     officer_position = models.CharField(max_length=60)
     officer_email = models.EmailField(unique=True, max_length=255)
     password = models.CharField(_("password"), max_length=128)

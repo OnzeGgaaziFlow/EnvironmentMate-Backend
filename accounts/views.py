@@ -38,11 +38,11 @@ class SignUpRequestData(viewsets.ModelViewSet):
         business_number = request.data.get("business_number")
         location_name = request.data.get("location_name")
 
-        get_data = micro_data_series_data(business_number, location_name, "GHG")
-        if not get_data:
-            return JsonResponse(
-                {"message": "Invalid Key"}, status=status.HTTP_400_BAD_REQUEST
-            )
+        # get_data = micro_data_series_data(business_number, location_name, "GHG")
+        # if not get_data:
+        #     return JsonResponse(
+        #         {"message": "Invalid Key"}, status=status.HTTP_400_BAD_REQUEST
+        #     )
         # except get_data is False:
 
         serializer = self.get_serializer(data=request.data)
