@@ -36,19 +36,7 @@ class GetTotalEnergyFromNumber(APIView):
         use = 0
         for i in Microdata.objects.filter(fanm="CB60C1A3561DEFE46CE65C13E79C52041786F5DD").values('use'):
             use += float(i['use'])
-        
-        # df = list((Microdata.objects.filter(fanm="CB60C1A3561DEFE46CE65C13E79C52041786F5DD").values()))
-        # print(df[0])
-        # microdatas_list = list(microdatas)
-        # print(microdatas_list)
-
-        # a_list = list(a)
-        # print(a)
-        # microdata_ids = set(microdata.id for microdata in microdatas)
-        # existing_question_microdatas = filter(lambda x: x.microdata.id not in microdatas_id, existing_question_microdatas)
-        # print(existing_question_microdatas)
         return JsonResponse({"total_use" : use})
-        # business_number = microdata
 
 
 class GetRegionEmissionGas(APIView):
@@ -93,7 +81,6 @@ class GetRegionEmissionGas(APIView):
 class GetEmissionGasCompareFromOther(APIView):
     """
     "datas/compare/same-region"
-    입력값 : 사용량
     해당 업체가 속해있는 지역의 전체 사용량과 업체 사용량 분석 비교
     예시 : 결과값(JSON)
     "result": "전남 지역 총 (78,516,261[GHG]) 온실가스 중 해당 업체는 온실가스(583,972[GHG]) 배출하고 있습니다."
@@ -143,7 +130,6 @@ class GetIndustryEmissionGasFromAll(APIView):
     """
     "datas/compare/industry-all"
     특정 연도의 전국 온실가스 배출량 중 해당 업종의 배출량 분석 결과
-    입력값 : 산업, GHG
     "result" : "2018년도 국내 업종 총 온실가스(698,909,140 [GHG]) 대비 현재 광업 업종은 0.10%의 온실가스(673,625[GHG])를 배출하고 있습니다."
     "media_url" : "http://domain.com/media/industry_total_usems_qnty_2018_광업.png
     """
@@ -180,7 +166,6 @@ class GetIndustryEmissionGasFromSameAll(APIView):
     """
     "compare/industry-sameall"
     특정 연도의 해당 업체에 해당하는 업종의 온실가스 배출량 중 해당업체의 사용량 분석 결과
-    입력값 : 사용량
     "result" : "광업 업종 총 (673,625[GHG]) 온실가스 중 해당 업체는 온실가스(130,002[GHG]) 배출하고 있습니다."
     "media_url" : "http://domain.com/media/my_industry_usems_qnty_2018_광업.png
     """
