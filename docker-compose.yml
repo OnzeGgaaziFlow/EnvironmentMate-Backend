@@ -30,7 +30,7 @@ services:
       - "3306"
     environment:
       MYSQL_DATABASE: envirmate_db
-      MYSQL_USER: envirmate
+      MYSQL_USER: root
       MYSQL_PASSWORD: ckswhd123~
       MYSQL_ROOT_PASSWORD: ckswhd123~
     volumes:

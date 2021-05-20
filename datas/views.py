@@ -4,7 +4,7 @@ from datas.functions.microdata import microdata_csv
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework import status, permissions
-from .functions import region as fun_region, industry as fun_industry
+from .functions import region as region, industry as fun_industry
 from accounts.models import Profile
 from .models import Microdata
 
@@ -117,14 +117,17 @@ class GetEmissionGasCompareFromOther(APIView):
                 {"message": "Key Error from location_name"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        usage = request.data.get("usage")
-        if not usage:
+        business_number = user_profile.business_number
+        if not business_number:
             return JsonResponse(
-                {"message": "Key Error from usage"},
+                {"message": "Key Error from business_number"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        use = 0
+        for i in Microdata.objects.filter(fanm=business_number).values('use'):
+            use += float(i['use'])
         try:
-            result = region.industry_usems_qnty_statistics(year, location_name, usage)
+            result = region.industry_usems_qnty_statistics(year, location_name, use)
         except ValueError:
             return JsonResponse(
                 {"message": "Fail to get data from open API."},
@@ -199,15 +202,18 @@ class GetIndustryEmissionGasFromSameAll(APIView):
                 {"message": "Key Error from industry"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        usage = request.data.get("usage")
-        if not usage:
+        business_number = user_profile.business_number
+        if not business_number:
             return JsonResponse(
-                {"message": "Key Error from usage"},
+                {"message": "Key Error from business_number"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        use = 0
+        for i in Microdata.objects.filter(fanm=business_number).values('use'):
+            use += float(i['use'])
         try:
             result = fun_industry.industry_usems_qnty_statistics(
-                year, industry, usage, "GHG"
+                year, industry, use, "GHG"
             )
         except ValueError:
             return JsonResponse(
