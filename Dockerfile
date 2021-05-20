@@ -6,7 +6,7 @@ FROM python:3.8
 WORKDIR /usr/src/app
 # requirements.txt에 명시된 필요한 packages 설치
 COPY requirements.txt ./
-RUN pip install --upgrade pip
+RUN pip install -U --upgrade pip
 RUN pip install -r requirements.txt
 # Project를 /usr/src/app으로 복사
 COPY . .
