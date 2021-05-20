@@ -17,7 +17,7 @@ from django.conf import settings
 #%%
 
 pd.set_option("display.max_columns", 15)  # 컬럼 숫자 설정, 15
-plt.rc("font", family="Nanum Gothic")
+plt.rc("font", family="NanumGothic")
 #%%
 
 

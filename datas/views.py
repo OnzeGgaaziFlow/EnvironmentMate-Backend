@@ -4,7 +4,7 @@ from datas.functions.microdata import microdata_csv
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework import status, permissions
-from .functions import region as fun_region, industry as fun_industry
+from .functions import region as region, industry as fun_industry
 from accounts.models import Profile
 from .models import Microdata
 
@@ -36,19 +36,7 @@ class GetTotalEnergyFromNumber(APIView):
         use = 0
         for i in Microdata.objects.filter(fanm="CB60C1A3561DEFE46CE65C13E79C52041786F5DD").values('use'):
             use += float(i['use'])
-        
-        # df = list((Microdata.objects.filter(fanm="CB60C1A3561DEFE46CE65C13E79C52041786F5DD").values()))
-        # print(df[0])
-        # microdatas_list = list(microdatas)
-        # print(microdatas_list)
-
-        # a_list = list(a)
-        # print(a)
-        # microdata_ids = set(microdata.id for microdata in microdatas)
-        # existing_question_microdatas = filter(lambda x: x.microdata.id not in microdatas_id, existing_question_microdatas)
-        # print(existing_question_microdatas)
         return JsonResponse({"total_use" : use})
-        # business_number = microdata
 
 
 class GetRegionEmissionGas(APIView):
@@ -93,7 +81,6 @@ class GetRegionEmissionGas(APIView):
 class GetEmissionGasCompareFromOther(APIView):
     """
     "datas/compare/same-region"
-    입력값 : 사용량
     해당 업체가 속해있는 지역의 전체 사용량과 업체 사용량 분석 비교
     예시 : 결과값(JSON)
     "result": "전남 지역 총 (78,516,261[GHG]) 온실가스 중 해당 업체는 온실가스(583,972[GHG]) 배출하고 있습니다."
@@ -117,14 +104,17 @@ class GetEmissionGasCompareFromOther(APIView):
                 {"message": "Key Error from location_name"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        usage = request.data.get("usage")
-        if not usage:
+        business_number = user_profile.business_number
+        if not business_number:
             return JsonResponse(
-                {"message": "Key Error from usage"},
+                {"message": "Key Error from business_number"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        use = 0
+        for i in Microdata.objects.filter(fanm=business_number).values('use'):
+            use += float(i['use'])
         try:
-            result = region.industry_usems_qnty_statistics(year, location_name, usage)
+            result = region.industry_usems_qnty_statistics(year, location_name, use)
         except ValueError:
             return JsonResponse(
                 {"message": "Fail to get data from open API."},
@@ -140,7 +130,6 @@ class GetIndustryEmissionGasFromAll(APIView):
     """
     "datas/compare/industry-all"
     특정 연도의 전국 온실가스 배출량 중 해당 업종의 배출량 분석 결과
-    입력값 : 산업, GHG
     "result" : "2018년도 국내 업종 총 온실가스(698,909,140 [GHG]) 대비 현재 광업 업종은 0.10%의 온실가스(673,625[GHG])를 배출하고 있습니다."
     "media_url" : "http://domain.com/media/industry_total_usems_qnty_2018_광업.png
     """
@@ -177,7 +166,6 @@ class GetIndustryEmissionGasFromSameAll(APIView):
     """
     "compare/industry-sameall"
     특정 연도의 해당 업체에 해당하는 업종의 온실가스 배출량 중 해당업체의 사용량 분석 결과
-    입력값 : 사용량
     "result" : "광업 업종 총 (673,625[GHG]) 온실가스 중 해당 업체는 온실가스(130,002[GHG]) 배출하고 있습니다."
     "media_url" : "http://domain.com/media/my_industry_usems_qnty_2018_광업.png
     """
@@ -199,15 +187,18 @@ class GetIndustryEmissionGasFromSameAll(APIView):
                 {"message": "Key Error from industry"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        usage = request.data.get("usage")
-        if not usage:
+        business_number = user_profile.business_number
+        if not business_number:
             return JsonResponse(
-                {"message": "Key Error from usage"},
+                {"message": "Key Error from business_number"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        use = 0
+        for i in Microdata.objects.filter(fanm=business_number).values('use'):
+            use += float(i['use'])
         try:
             result = fun_industry.industry_usems_qnty_statistics(
-                year, industry, usage, "GHG"
+                year, industry, use, "GHG"
             )
         except ValueError:
             return JsonResponse(
