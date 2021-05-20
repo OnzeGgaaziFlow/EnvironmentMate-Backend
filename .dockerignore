@@ -1,9 +1,9 @@
 # #if vscode uses
 # .vscode
-
+venv/
 # #if migrations file exists
 migrations/
 
 # #static volume file
-venv/
+
 
