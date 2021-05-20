@@ -9,7 +9,7 @@ from urllib.parse import quote_plus, urlencode
 from pandas import DataFrame, Series  # 시리즈, 데이터프레임 모듈
 from pandas import ExcelFile, ExcelWriter  # 엑셀 읽기, 쓰기 모듈
 import pickle
-# import seaborn as sns
+import seaborn as sns
 import matplotlib.pyplot as plt
 from pandas import DataFrame
 from django.conf import settings
@@ -17,7 +17,7 @@ from django.conf import settings
 #%%
 
 pd.set_option("display.max_columns", 15)  # 컬럼 숫자 설정, 15
-plt.rc("font", family="AppleGothic")
+plt.rc("font", family="Nanum Gothic")
 #%%
 
 
@@ -92,7 +92,7 @@ def report_table(file_type, tyear, cate, eg_type):
     )
     pv_df = pv_df.fillna(0)  # Nan을 0으로 대체
 
-    print(pv_df)
+    # print(pv_df)
 
     return pv_df
 
@@ -101,8 +101,8 @@ def report_table(file_type, tyear, cate, eg_type):
 def total_usems_qnty(year, region):
     data = report_table("xml", str(year), "지역별", "GHG")  # 파일형식, 연도, 구분, 에너지/온실가스
     labels = data.index.to_list()
-    print(labels)
-    # colors = sns.color_palette("hls", len(labels))  ## 색상
+    # print(labels)
+    colors = sns.color_palette("hls", len(labels))  ## 색상
     frequency = data["합계"].values  ## 빈도
     region_frequency = frequency[labels.index(region)]
     plt.switch_backend("Agg")  ## 백엔드 설정
@@ -180,7 +180,7 @@ def industry_usems_qnty_statistics(year, region, usage):
     data = report_table("xml", str(year), "지역별", "GHG")  # 파일형식, 연도, 구분, 에너지/온실가스
     ## 데이터 준비
     labels = ["동지역 업체", "해당 업체"]
-    # colors = sns.color_palette("hls", len(labels))  ## 색상
+    colors = sns.color_palette("hls", len(labels))  ## 색상
     frequency = [(data.at[region, "합계"] - usage), usage]
     my_frequency = frequency[1]
     plt.switch_backend("Agg")  ## 백엔드 설정
