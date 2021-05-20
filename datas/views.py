@@ -8,16 +8,16 @@ from .functions import region as region, industry as fun_industry
 from accounts.models import Profile
 from .models import Microdata
 
-BASE_URL = "localhost:8000/"
+BASE_URL = "http://ae012de64b11.ngrok.io/"
+
 
 class GetTotalEnergyFromNumber(APIView):
     """
     해당 사업장의 총 사용량 반환    
     """
 
-
     permission_classes = (permissions.IsAuthenticated,)
-    
+
     def get(self, request):
         user = request.user
         year = 2018
@@ -36,7 +36,7 @@ class GetTotalEnergyFromNumber(APIView):
         use = 0
         for i in Microdata.objects.filter(fanm="CB60C1A3561DEFE46CE65C13E79C52041786F5DD").values('use'):
             use += float(i['use'])
-        return JsonResponse({"total_use" : use})
+        return JsonResponse({"total_use": use})
 
 
 class GetRegionEmissionGas(APIView):
@@ -66,7 +66,7 @@ class GetRegionEmissionGas(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         try:
-            result = fun_region.total_usems_qnty(year, location_name)
+            result = region.total_usems_qnty(year, location_name)
         except ValueError:
             return JsonResponse(
                 {"message": "Fail to get data from open API."},
@@ -114,7 +114,8 @@ class GetEmissionGasCompareFromOther(APIView):
         for i in Microdata.objects.filter(fanm=business_number).values('use'):
             use += float(i['use'])
         try:
-            result = region.industry_usems_qnty_statistics(year, location_name, use)
+            result = region.industry_usems_qnty_statistics(
+                year, location_name, use)
         except ValueError:
             return JsonResponse(
                 {"message": "Fail to get data from open API."},
@@ -225,6 +226,7 @@ class GetIndustryEnergyCompareDetail(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
+
         year = 2018
         user = request.user
         user_profile = user.profile
@@ -239,37 +241,37 @@ class GetIndustryEnergyCompareDetail(APIView):
                 {"message": "Key Error from industry"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        gas = request.data.get("gas")
+        gas = int(request.GET['gas'])
         if not gas:
             return JsonResponse(
                 {"err_message": "Key Error from gas"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        other = request.data.get("other")
+        other = int(request.GET['other'])
         if not other:
             return JsonResponse(
                 {"err_message": "Key Error from other"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        oil = request.data.get("oil")
+        oil = int(request.GET['oil'])
         if not oil:
             return JsonResponse(
                 {"err_message": "Key Error from oil"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        coal = request.data.get("coal")
+        coal = int(request.GET['coal'])
         if not coal:
             return JsonResponse(
                 {"err_message": "Key Error from coal"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        thermal = request.data.get("thermal")
+        thermal = int(request.GET['thermal'])
         if not thermal:
             return JsonResponse(
                 {"err_message": "Key Error from thermal"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        electric = request.data.get("electric")
+        electric = int(request.GET['electric'])
         if not electric:
             return JsonResponse(
                 {"err_message": "Key Error from electric"},
