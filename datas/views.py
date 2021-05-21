@@ -13,7 +13,7 @@ BASE_URL = "http://ae012de64b11.ngrok.io/"
 
 class GetTotalEnergyFromNumber(APIView):
     """
-    해당 사업장의 총 사용량 반환    
+    해당 사업장의 총 사용량 반환
     """
 
     permission_classes = (permissions.IsAuthenticated,)
@@ -112,7 +112,9 @@ class GetEmissionGasCompareFromOther(APIView):
             )
         use = 0
         for i in Microdata.objects.filter(fanm=business_number).values('use'):
-            use += float(i['use'])
+            usage = int(float(i['use'].split('(')[0]))
+            use += usage
+        use = use * 100
         try:
             result = region.industry_usems_qnty_statistics(
                 year, location_name, use)
@@ -196,7 +198,9 @@ class GetIndustryEmissionGasFromSameAll(APIView):
             )
         use = 0
         for i in Microdata.objects.filter(fanm=business_number).values('use'):
-            use += float(i['use'])
+            usage = int(float(i['use'].split('(')[0]))
+            use += usage
+        use = use * 100
         try:
             result = fun_industry.industry_usems_qnty_statistics(
                 year, industry, use, "GHG"
