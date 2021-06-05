@@ -8,7 +8,7 @@ from .functions import region as region, industry as fun_industry
 from accounts.models import Profile
 from .models import Microdata
 
-BASE_URL = "http://ae012de64b11.ngrok.io/"
+BASE_URL = "http://ff4839aab5bb.ngrok.io/"
 
 
 class GetTotalEnergyFromNumber(APIView):

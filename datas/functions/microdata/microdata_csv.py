@@ -51,7 +51,8 @@ def micro_data(file_type, tyear, area, eg_type):
     # print(html)
 
     total_count = html.find("totalcount").text  # 전체 행수
-    total_page = int(int(total_count) / int(html.find("numofrows").text)) + 1  # 전체 페이지수
+    total_page = int(int(total_count) /
+                     int(html.find("numofrows").text)) + 1  # 전체 페이지수
     print("전체 행수, 전체 페이지수 : ", total_count, total_page)
 
     rows = []  # 빈 리스트 설정
@@ -117,14 +118,14 @@ def micro_data_table(id, tyear, area, eg_type):
 
 # 사업장 id, 지역, 온실가스 배출 단위를 입력으로 받으면 과거 에너지 소비량에 대한 시계열 데이터를 그래프로 확인할 수 있음. (2010~2018)
 def micro_data_series_data(id, area, eg_type):
-    data = micro_data("xml", str(2015), area, eg_type)
-    for i in range(2016, 2019):
-        try:
-            next = micro_data("xml", str(i), area, eg_type)
-            next = next[data["사업장"] == id]
-            data = data.concat[data, next]
-        except:
-            continue
+    data = micro_data("xml", str(2018), area, eg_type)
+    # for i in range(2016, 2019):
+    #     try:
+    #         next = micro_data("xml", str(i), area, eg_type)
+    #         next = next[data["사업장"] == id]
+    #         data = data.concat[data, next]
+    #     except:
+    #         continue
     data.to_csv(f"micro_series_data_{id}.csv")
     return data
 
